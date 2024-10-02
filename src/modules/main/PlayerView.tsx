@@ -1,22 +1,33 @@
-import { Box, Typography } from '@mui/material';
+import { useCallback } from 'react';
 
-import { useLocalContext } from '@graasp/apps-query-client';
+import { DataCollection } from 'jspsych';
 
-import { hooks } from '@/config/queryClient';
+import { mutations } from '@/config/queryClient';
 import { PLAYER_VIEW_CY } from '@/config/selectors';
 
+import { useSettings } from '../context/SettingsContext';
+import { ExperimentLoader } from './ExperimentLoader';
+
 const PlayerView = (): JSX.Element => {
-  const { permission } = useLocalContext();
-  const { data: appContext } = hooks.useAppContext();
-  const members = appContext?.members;
+  const { mutate: postAppData } = mutations.usePostAppData();
+  const settingSavedState = useSettings();
+
+  const onCompleteExperiment = useCallback(
+    (data: DataCollection): void => {
+      postAppData({
+        data: { data },
+        type: 'a-type',
+      });
+    },
+    [postAppData],
+  );
 
   return (
     <div data-cy={PLAYER_VIEW_CY}>
-      Player as {permission}
-      <Box p={2}>
-        <Typography>Members</Typography>
-        <pre>{JSON.stringify(members, null, 2)}</pre>
-      </Box>
+      <ExperimentLoader
+        onCompleteExperiment={onCompleteExperiment}
+        settings={settingSavedState}
+      />
     </div>
   );
 };
