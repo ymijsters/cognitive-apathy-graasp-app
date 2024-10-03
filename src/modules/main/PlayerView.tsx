@@ -5,7 +5,7 @@ import { DataCollection } from 'jspsych';
 import { mutations } from '@/config/queryClient';
 import { PLAYER_VIEW_CY } from '@/config/selectors';
 
-import { useSettings } from '../context/SettingsContext';
+import { AllSettingsType, useSettings } from '../context/SettingsContext';
 import { ExperimentLoader } from './ExperimentLoader';
 
 const PlayerView = (): JSX.Element => {
@@ -13,9 +13,9 @@ const PlayerView = (): JSX.Element => {
   const settingSavedState = useSettings();
 
   const onCompleteExperiment = useCallback(
-    (data: DataCollection): void => {
+    (data: DataCollection, settings: AllSettingsType): void => {
       postAppData({
-        data: { data },
+        data: { data, settings },
         type: 'a-type',
       });
     },

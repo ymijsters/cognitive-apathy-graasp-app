@@ -195,14 +195,19 @@ export const INTERACTIVE_KEYBOARD_TUTORIAL_MESSAGE = i18n.t(
     KEY_TO_PRESS: KEY_TO_PRESS.toUpperCase(),
   },
 );
-export const DEMO_TRIAL_MESSAGE = i18n.t('DEMO_TRIAL_MESSAGE', {
-  NUM_DEMO_TRIALS,
-  NUM_TRIALS,
-  KEY_TO_PRESS: KEY_TO_PRESS.toUpperCase(),
-  KEYS_TO_HOLD_0: KEYS_TO_HOLD[0].toUpperCase(),
-  KEYS_TO_HOLD_1: KEYS_TO_HOLD[1].toUpperCase(),
-  KEYS_TO_HOLD_2: KEYS_TO_HOLD[2].toUpperCase(),
-});
+export const DEMO_TRIAL_MESSAGE = (
+  numDemo: number,
+  numTrials: number,
+): string =>
+  i18n.t('DEMO_TRIAL_MESSAGE', {
+    numDemo,
+    numTrials,
+    KEY_TO_PRESS: KEY_TO_PRESS.toUpperCase(),
+    KEYS_TO_HOLD_0: KEYS_TO_HOLD[0].toUpperCase(),
+    KEYS_TO_HOLD_1: KEYS_TO_HOLD[1].toUpperCase(),
+    KEYS_TO_HOLD_2: KEYS_TO_HOLD[2].toUpperCase(),
+  });
+
 export const ACCEPTANCE_TRIAL_MESSAGE = i18n.t('ACCEPTANCE_TRIAL_MESSAGE');
 export const DOMINANT_HAND_MESSAGE = i18n.t('DOMINANT_HAND_MESSAGE');
 export const TRIAL_FAILED = i18n.t('TRIAL_FAILED');

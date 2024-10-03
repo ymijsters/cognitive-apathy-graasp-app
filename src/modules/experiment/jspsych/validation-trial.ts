@@ -1,5 +1,5 @@
 import htmlButtonResponse from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import { countdownStep } from '../trials/countdown-trial';
 import { loadingBarTrial } from '../trials/loading-bar-trial';
@@ -212,6 +212,7 @@ export const createValidationTrial = (
 export const validationResultScreen = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  onFinish: (data: DataCollection) => void,
 ): Trial => ({
   type: htmlButtonResponse,
   choices: [CONTINUE_BUTTON_MESSAGE],
@@ -222,7 +223,7 @@ export const validationResultScreen = (
   },
   on_finish() {
     if (!state.getState().validationState.validationSuccess) {
-      finishExperimentEarly(jsPsych);
+      finishExperimentEarly(jsPsych, onFinish);
     }
   },
 });

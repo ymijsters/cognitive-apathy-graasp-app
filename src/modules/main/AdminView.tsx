@@ -3,7 +3,7 @@ import { type FC, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Tab } from '@mui/material';
 
-import AnswersView from '../answers/AnswersView';
+import ResultsView from '../answers/ResultsView';
 import SettingsView from '../settings/SettingsView';
 
 enum Tabs {
@@ -31,7 +31,7 @@ const AdminView: FC = () => {
           />
         </TabList>
         <TabPanel value={Tabs.RESULTS_VIEW}>
-          <AnswersView />
+          <ResultsView />
         </TabPanel>
         <TabPanel value={Tabs.SETTINGS_VIEW}>
           <SettingsView />

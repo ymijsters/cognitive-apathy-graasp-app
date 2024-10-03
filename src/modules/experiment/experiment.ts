@@ -21,14 +21,6 @@ import './styles/main.scss';
 import { PROGRESS_BAR } from './utils/constants';
 import { Timeline } from './utils/types';
 
-// Ensures warning message on reload
-window.addEventListener('beforeunload', (event) => {
-  event.preventDefault();
-  // eslint-disable-next-line no-param-reassign
-  event.returnValue = ''; // Modern browsers require returnValue to be set
-  return '';
-});
-
 /**
  * @function run
  * @description Main function to run the experiment
@@ -51,10 +43,18 @@ export async function run({
     auto_update_progress_bar: false,
     message_progress_bar: PROGRESS_BAR.PROGRESS_BAR_INTRODUCTION,
     display_element: 'jspsych-content',
-    on_finish: (): void => {
-      const resultData = jsPsych.data.get();
-      onFinish(resultData);
-    },
+    /* on_finish: (): void => {
+      // const resultData = jsPsych.data.get();
+      // onFinish(resultData);
+    }, */
+  });
+
+  // Ensures warning message on reload
+  window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = ''; // Modern browsers require returnValue to be set
+    return '';
   });
 
   // Update everything below to just structurally import individual parts of the experiment
@@ -65,15 +65,15 @@ export async function run({
     max_load_time: 120000, // Allows program to load (arbitrary value currently)
   });
 
-  timeline.push(buildIntroduction(jsPsych, state));
+  timeline.push(buildIntroduction(jsPsych));
   timeline.push(buildPracticeTrials(jsPsych, state));
-  timeline.push(buildCalibration(jsPsych, state));
-  timeline.push(buildValidation(jsPsych, state));
+  timeline.push(buildCalibration(jsPsych, state, onFinish));
+  timeline.push(buildValidation(jsPsych, state, onFinish));
   timeline.push(buildTaskCore(jsPsych, state));
   timeline.push(buildFinalCalibration(jsPsych, state));
 
   // User clicks continue to download experiment data locally
-  timeline.push(finishExperiment(jsPsych));
+  timeline.push(finishExperiment(jsPsych, onFinish));
   await jsPsych.run(timeline);
 
   return jsPsych;

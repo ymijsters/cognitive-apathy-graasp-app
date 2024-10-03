@@ -1,5 +1,5 @@
 import htmlButtonResponse from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import { countdownStep } from '../trials/countdown-trial';
 import { loadingBarTrial } from '../trials/loading-bar-trial';
@@ -221,11 +221,10 @@ export const createCalibrationTrial = ({
  *
  * The entire trial is conditionally run based on whether the corresponding calibration part failed in a previous trial due to not reaching the minimum median taps.
  */
-export const createConditionalCalibrationTrial = ({
-  calibrationPart,
-  jsPsych,
-  state,
-}: ConditionalCalibrationTrialParams): Trial => ({
+export const createConditionalCalibrationTrial = (
+  { calibrationPart, jsPsych, state }: ConditionalCalibrationTrialParams,
+  onFinish: (data: DataCollection) => void,
+): Trial => ({
   timeline: [
     // Add a trial with the directions that the user should tap faster
     {
@@ -249,7 +248,7 @@ export const createConditionalCalibrationTrial = ({
     }),
     {
       // If minimum taps is not reached in this set of conditional trials, then end experiment
-      timeline: [finishExperimentEarlyTrial(jsPsych)],
+      timeline: [finishExperimentEarlyTrial(jsPsych, onFinish)],
       conditional_function() {
         return (
           state.getState().medianTaps[calibrationPart] <
@@ -326,12 +325,16 @@ export const conditionalCalibrationTrial = (
   jsPsych: JsPsych,
   state: ExperimentState,
   calibrationPart: CalibrationPartType,
+  onFinish: (data: DataCollection) => void,
 ): Trial => ({
-  ...createConditionalCalibrationTrial({
-    calibrationPart,
-    jsPsych,
-    state,
-  }),
+  ...createConditionalCalibrationTrial(
+    {
+      calibrationPart,
+      jsPsych,
+      state,
+    },
+    onFinish,
+  ),
   on_timeline_finish() {
     if (state.getState().calibrationPartsPassed[calibrationPart]) {
       changeProgressBar(

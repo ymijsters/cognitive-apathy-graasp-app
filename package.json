@@ -38,6 +38,7 @@
     "@types/react-dom": "18.3.0",
     "alias-hq": "^6.2.3",
     "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
     "fast-cartesian": "^9.0.0",
     "file-saver": "^2.0.5",
     "i18next": "^23.9.0",

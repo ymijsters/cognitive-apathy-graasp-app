@@ -7,7 +7,10 @@ import { AllSettingsType } from '../context/SettingsContext';
 import { run } from '../experiment/experiment';
 
 type ExperimentProps = {
-  onCompleteExperiment: (data: DataCollection) => void;
+  onCompleteExperiment: (
+    data: DataCollection,
+    settings: AllSettingsType,
+  ) => void;
   settings: AllSettingsType;
 };
 
@@ -37,8 +40,8 @@ export const ExperimentLoader: FC<ExperimentProps> = ({
   };
 
   const onFinish = (data: DataCollection): void => {
-    console.log('In OnFinish in ExperimentLoader');
-    onCompleteExperiment(data);
+    console.log('In Experiment Loader');
+    onCompleteExperiment(data, settings);
   };
 
   useEffect(() => {

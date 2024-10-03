@@ -1,5 +1,5 @@
 import htmlButtonResponse from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import {
   END_EXPERIMENT_MESSAGE,
@@ -30,7 +30,10 @@ import {
  * @returns {Object} - A jsPsych trial object that finalizes the experiment and handles the necessary data saving and display logic.
  */
 
-export const finishExperiment = (jsPsych: JsPsych): Trial => ({
+export const finishExperiment = (
+  jsPsych: JsPsych,
+  onFinish: (data: DataCollection) => void,
+): Trial => ({
   type: htmlButtonResponse,
   choices: [FINISH_BUTTON_MESSAGE],
   stimulus() {
@@ -45,7 +48,8 @@ export const finishExperiment = (jsPsych: JsPsych): Trial => ({
     const totalSuccessfulReward = calculateTotalReward(jsPsych);
     // eslint-disable-next-line no-param-reassign
     data.totalReward = totalSuccessfulReward;
-    jsPsych.data.get().localSave('csv', 'cognitive-apathy.csv');
+    const resultData = jsPsych.data.get();
+    onFinish(resultData);
     showEndScreen(EXPERIMENT_HAS_ENDED_MESSAGE);
   },
 });
@@ -64,9 +68,13 @@ export const finishExperiment = (jsPsych: JsPsych): Trial => ({
 
 // This is used in the calibration section section and should eventually be merged with the "finishExperimentEarlyTrial" below
 
-export const finishExperimentEarly = (jsPsych: JsPsych): void => {
-  jsPsych.data.get().localSave('csv', 'cognitive-apathy.csv');
+export const finishExperimentEarly = (
+  jsPsych: JsPsych,
+  onFinish: (data: DataCollection) => void,
+): void => {
   jsPsych.abortExperiment(FAILED_VALIDATION_MESSAGE);
+  const resultData = jsPsych.data.get();
+  onFinish(resultData);
   showEndScreen(EXPERIMENT_HAS_ENDED_MESSAGE);
 };
 
@@ -85,7 +93,10 @@ export const finishExperimentEarly = (jsPsych: JsPsych): void => {
  * @returns {Object} - A jsPsych trial object that handles the early termination of the experiment and performs the necessary data saving and display logic.
  */
 
-export const finishExperimentEarlyTrial = (jsPsych: JsPsych): Trial => ({
+export const finishExperimentEarlyTrial = (
+  jsPsych: JsPsych,
+  onFinish: (data: DataCollection) => void,
+): Trial => ({
   type: htmlButtonResponse,
   choices: [FINISH_BUTTON_MESSAGE],
   stimulus: FAILED_VALIDATION_MESSAGE,
@@ -93,6 +104,6 @@ export const finishExperimentEarlyTrial = (jsPsych: JsPsych): Trial => ({
     task: 'finish_experiment',
   },
   on_finish() {
-    finishExperimentEarly(jsPsych);
+    finishExperimentEarly(jsPsych, onFinish);
   },
 });

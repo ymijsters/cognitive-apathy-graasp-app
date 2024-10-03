@@ -1,5 +1,5 @@
 import HtmlButtonResponsePlugin from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import {
   calibrationTrial,
@@ -69,6 +69,7 @@ const calibrationVideo = (
 export const buildCalibration = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  onFinish: (data: DataCollection) => void,
 ): Timeline => {
   const calibrationTimeline: Timeline = [];
 
@@ -89,6 +90,7 @@ export const buildCalibration = (
       jsPsych,
       state,
       CalibrationPartType.CalibrationPart1,
+      onFinish,
     ),
   );
 
@@ -108,6 +110,7 @@ export const buildCalibration = (
       jsPsych,
       state,
       CalibrationPartType.CalibrationPart2,
+      onFinish,
     ),
   );
 

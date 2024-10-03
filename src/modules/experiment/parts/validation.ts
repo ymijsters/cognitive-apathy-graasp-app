@@ -1,5 +1,5 @@
 import HtmlButtonResponsePlugin from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import { ExperimentState } from '../jspsych/experiment-state-class';
 import { validationVideo } from '../jspsych/stimulus';
@@ -37,6 +37,7 @@ export const validationVideoTutorialTrial = (jsPsych: JsPsych): Trial => ({
 export const buildValidation = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  onFinish: (data: DataCollection) => void,
 ): Timeline => {
   const validationTimeline: Timeline = [];
   // User is displayed instructions and visual demonstration on how the validations trials will proceed
@@ -73,7 +74,7 @@ export const buildValidation = (
   validationTimeline.push(likertFinalQuestionAfterValidation());
 
   // Showcase the final result screen of the validation
-  validationTimeline.push(validationResultScreen(jsPsych, state));
+  validationTimeline.push(validationResultScreen(jsPsych, state, onFinish));
 
   return validationTimeline;
 };

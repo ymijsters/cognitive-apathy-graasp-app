@@ -73,6 +73,11 @@ const failedMinimumDemoTapsTrial = (): Trial => ({
   trial_duration: FAILED_MINIMUM_DEMO_TAPS_DURATION,
 });
 
+const getNumTrialsPerBlock = (state: ExperimentState): number =>
+  state.getTaskSettings().taskPermutationRepetitions *
+  state.getTaskSettings().taskBoundsIncluded.length *
+  state.getTaskSettings().taskRewardsIncluded.length;
+
 /**
  * Generate a single Trial (demo or real) for a trial block
  * @param jsPsych experiment context
@@ -212,7 +217,8 @@ export const createTaskBlockDemo = (
 ): Timeline => [
   {
     type: htmlButtonResponse,
-    stimulus: () => `<p>${DEMO_TRIAL_MESSAGE}</p>`,
+    stimulus: () =>
+      `<p>${DEMO_TRIAL_MESSAGE(state.getTaskSettings().taskBoundsIncluded.length, getNumTrialsPerBlock(state))}</p>`,
     choices: [CONTINUE_BUTTON_MESSAGE],
     on_start() {
       changeProgressBar(
