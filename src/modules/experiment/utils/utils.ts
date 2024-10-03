@@ -220,6 +220,28 @@ export function showEndScreen(message: string): void {
 }
 
 /**
+ *  Function to sort and limit the array to max 1 item of each type
+ * @param arr Array to be sorted
+ */
+export function sortEnumArray<T extends string>(
+  arr: T[],
+  sortOrder: Record<T, number>,
+): T[] {
+  // Use a Set to keep track of included types
+  const includedTypes = new Set<T>();
+
+  // Filter out only the first occurrence of each type
+  const filteredArr = arr.filter((type) => {
+    if (!includedTypes.has(type)) {
+      includedTypes.add(type);
+      return true;
+    }
+    return false;
+  });
+  return filteredArr.sort((a, b) => sortOrder[a] - sortOrder[b]);
+}
+
+/**
  * @function saveDataToLocalStorage
  * @description Saves the current jsPsych data to local storage.
  *

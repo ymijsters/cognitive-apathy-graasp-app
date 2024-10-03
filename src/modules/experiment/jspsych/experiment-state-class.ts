@@ -1,4 +1,9 @@
 import {
+  boundsSortOrder,
+  delaySortOrder,
+  rewardSortOrder,
+} from '@/modules/config/appSettings';
+import {
   AllSettingsType,
   CalibrationSettingsType,
   PracticeSettingsType,
@@ -13,6 +18,7 @@ import {
   RewardType,
   ValidationPartType,
 } from '../utils/types';
+import { sortEnumArray } from '../utils/utils';
 
 type CurrentCalibrationStepSuccessesType = {
   [key in CalibrationPartType]: number;
@@ -187,7 +193,21 @@ export class ExperimentState {
   }
 
   getTaskSettings(): TaskSettingsType {
-    return this.settings.taskSettings;
+    return {
+      ...this.settings.taskSettings,
+      taskBoundsIncluded: sortEnumArray<BoundsType>(
+        this.settings.taskSettings.taskBoundsIncluded,
+        boundsSortOrder,
+      ),
+      taskRewardsIncluded: sortEnumArray<RewardType>(
+        this.settings.taskSettings.taskRewardsIncluded,
+        rewardSortOrder,
+      ),
+      taskBlocksIncluded: sortEnumArray<DelayType>(
+        this.settings.taskSettings.taskBlocksIncluded,
+        delaySortOrder,
+      ),
+    };
   }
 
   getCurrentSuccesses = (calibrationPart: CalibrationPartType): number =>
