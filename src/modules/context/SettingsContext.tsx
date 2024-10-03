@@ -32,6 +32,7 @@ export type TaskSettingsType = {
   taskRewardsIncluded: RewardType[];
   taskBlockRepetitions: number;
   taskPermutationRepetitions: number;
+  randomSkipChance: number;
 };
 
 // mapping between Setting names and their data type
@@ -66,6 +67,7 @@ const defaultSettingsValues: AllSettingsType = {
     taskBlocksIncluded: [DelayType.Sync, DelayType.WideAsync],
     taskBoundsIncluded: [BoundsType.Easy, BoundsType.Hard],
     taskRewardsIncluded: [RewardType.Low, RewardType.High],
+    randomSkipChance: 0,
   },
 };
 

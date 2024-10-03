@@ -227,6 +227,8 @@ class TappingTask {
     let keyboardInstance: KeyboardType;
     let inputElement: HTMLInputElement | undefined;
 
+    const randomSkip = trial.randomChanceAccepted;
+
     const getRandomDelay = (): number => {
       const [min, max]: [number, number] = trial.randomDelay;
       return randomNumberBm(min, max);
@@ -257,10 +259,11 @@ class TappingTask {
     };
 
     const isSuccess = (): boolean =>
-      this.mercuryHeight >= trial.bounds[0] &&
-      this.mercuryHeight <= trial.bounds[1] &&
-      !trial.keysReleasedFlag &&
-      !trial.keyTappedEarlyFlag;
+      (this.mercuryHeight >= trial.bounds[0] &&
+        this.mercuryHeight <= trial.bounds[1] &&
+        !trial.keysReleasedFlag &&
+        !trial.keyTappedEarlyFlag) ||
+      randomSkip;
 
     const setAreKeysHeld = (): void => {
       if (trialEnded) return;
@@ -346,6 +349,10 @@ class TappingTask {
     };
 
     const startRunning = (): void => {
+      if (randomSkip) {
+        endTrial();
+        return;
+      }
       isRunning = true;
       startTime = this.jsPsych.getTotalTime();
       tapCount = 0;

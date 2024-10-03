@@ -161,6 +161,7 @@ export class ExperimentState {
         ],
         taskBlockRepetitions: 2,
         taskPermutationRepetitions: 1,
+        randomSkipChance: 0,
       },
     };
   }

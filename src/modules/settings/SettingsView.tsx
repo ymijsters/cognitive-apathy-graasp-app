@@ -442,7 +442,27 @@ const SettingsView: FC = () => {
             })
           }
         />
+        <Stack spacing={0}>
+          <Typography variant="body1">
+            Percentage chance to skip trial after accepting
+          </Typography>
+          <Typography variant="body1" sx={{ fontStyle: 'italic' }}>
+            A percentage at which a subject is not required to perform a trial
+            after accepting. Percentage in full numbers (25 = 25%). <br />
+            This means 25% of accepted trials will not need to be executed.
+          </Typography>
+        </Stack>
+        <TextField
+          value={taskSettings.randomSkipChance}
+          onChange={(e) =>
+            updateTaskSettings({
+              ...taskSettings,
+              randomSkipChance: Number(e.target.value),
+            })
+          }
+        />
       </Stack>
+
       <Box>
         <Button variant="contained" onClick={saveAllSettings}>
           Save

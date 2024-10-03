@@ -15,7 +15,7 @@ export const AUTO_DECREASE_RATE = 100;
 export const AUTO_INCREASE_AMOUNT = 10;
 export const MAXIMUM_THERMOMETER_HEIGHT = 100;
 export const EXPECTED_MAXIMUM_PERCENTAGE = 100;
-export const KEYS_TO_HOLD = ['a', 'w', 'e'];
+export const KEYS_TO_HOLD = ['a', 'w', 'e', ' ', 'arrowright'];
 export const KEY_TO_PRESS = 'f';
 export const NUM_TAPS_WITHOUT_DELAY = 5;
 
@@ -200,8 +200,8 @@ export const DEMO_TRIAL_MESSAGE = (
   numTrials: number,
 ): string =>
   i18n.t('DEMO_TRIAL_MESSAGE', {
-    numDemo,
-    numTrials,
+    NUM_DEMO_TRIALS: numDemo,
+    NUM_TRIALS: numTrials,
     KEY_TO_PRESS: KEY_TO_PRESS.toUpperCase(),
     KEYS_TO_HOLD_0: KEYS_TO_HOLD[0].toUpperCase(),
     KEYS_TO_HOLD_1: KEYS_TO_HOLD[1].toUpperCase(),

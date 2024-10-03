@@ -5,7 +5,8 @@ import {
   TRIAL_FAILED,
   TRIAL_SUCCEEDED,
 } from '../utils/constants';
-import { Trial } from '../utils/types';
+import { OtherTaskStagesType, Trial } from '../utils/types';
+import { checkFlag } from '../utils/utils';
 
 type SuccessTrialType = {
   trial_duration: number;
@@ -89,8 +90,12 @@ export const successScreen = (jsPsych: JsPsych): Trial => ({
   type: SuccessScreenPlugin,
   task: 'success',
   success() {
-    const previousTrial = jsPsych.data.get().last(2).first().values()[0];
-    return previousTrial.success;
+    // const previousTrial = jsPsych.data.get().last(2).first().values()[0];
+    return checkFlag(
+      OtherTaskStagesType.Block,
+      'success',
+      jsPsych,
+    ) /* previousTrial.success */;
   },
   trial_duration: SUCCESS_SCREEN_DURATION,
 });

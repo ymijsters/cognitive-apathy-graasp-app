@@ -94,8 +94,9 @@ const generateTaskTrial = (
   trialSettings: TrialSettingsType,
   blockType: DelayType,
   demo: boolean,
+  randomSkip: boolean,
 ): Timeline => [
-  countdownStep(),
+  ...(!randomSkip ? [countdownStep()] : []),
   {
     type: TappingTask,
     task: demo ? OtherTaskStagesType.Demo : OtherTaskStagesType.Block,
@@ -104,6 +105,7 @@ const generateTaskTrial = (
     randomDelay: trialSettings.delay,
     bounds: trialSettings.bounds,
     reward: trialSettings.reward,
+    randomChanceAccepted: randomSkip,
     autoIncreaseAmount() {
       return autoIncreaseAmountCalculation(
         EXPECTED_MAXIMUM_PERCENTAGE,
@@ -159,9 +161,11 @@ const generateTaskTrial = (
   {
     timeline: [releaseKeysStep()],
     conditional_function() {
-      return checkKeys(
-        demo ? OtherTaskStagesType.Demo : OtherTaskStagesType.Block,
-        jsPsych,
+      return (
+        checkKeys(
+          demo ? OtherTaskStagesType.Demo : OtherTaskStagesType.Block,
+          jsPsych,
+        ) && !randomSkip
       );
     },
   },
@@ -242,6 +246,7 @@ export const createTaskBlockDemo = (
         },
         delay,
         true,
+        false,
       ),
       loop_function() {
         return (
@@ -293,6 +298,8 @@ export const createTaskBlockTrials = (
         ];
       const actualBounds = getBoundsVariation(bounds);
       const actualDelay = DELAY_DEFINITIONS[delay];
+      const randomSkip =
+        Math.random() <= state.getTaskSettings().randomSkipChance / 100;
       return [
         {
           type: HtmlKeyboardResponsePlugin,
@@ -324,6 +331,7 @@ export const createTaskBlockTrials = (
             { delay: actualDelay, bounds: actualBounds, reward: actualReward },
             delay,
             false,
+            randomSkip,
           ),
           conditional_function: () =>
             checkFlag(
