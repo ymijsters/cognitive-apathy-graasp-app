@@ -19,7 +19,7 @@
   "LIKERT_PREAMBLE": "During this <b>last block of trials</b>, how would you respond to the following question?",
   "LIKERT_PREAMBLE_DEMO": "During this last block of practice trials, how would you respond to the following question?",
   "FAILED_MINIMUM_DEMO_TAPS_MESSAGE": "You did not tap enough during the last practice trial. Please try again.",
-  "HOLD_KEYS_MESSAGE": "<p>Hold the <b>{{KEYS_TO_HOLD_0}}</b>, <b>{{KEYS_TO_HOLD_1}}</b>, and <b>{{KEYS_TO_HOLD_2}}</b>, <b>Spacebar</b>, <b>Right Arrow</b> keys!</p>",
+  "HOLD_KEYS_MESSAGE": "<p>Hold the <b>{{KEYS_TO_HOLD_0}}</b>, <b>{{KEYS_TO_HOLD_1}}</b>, <b>{{KEYS_TO_HOLD_2}}</b>, <b>Spacebar</b> and <b>Right Arrow</b> keys!</p>",
   "KEY_TAPPED_EARLY_MESSAGE": "Key was tapped too early. Please wait for the appropriate time to press the key.",
   "RELEASE_KEYS_MESSAGE": "Release All Keys",
   "REWARD_TOTAL_MESSAGE": "You have earned: CHF {{totalSuccessfulReward}} total. Press the button below to proceed to the next block of trials.",

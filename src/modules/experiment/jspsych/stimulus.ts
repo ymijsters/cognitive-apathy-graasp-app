@@ -21,17 +21,30 @@ export function stimulus(
   mercuryHeight: number,
   lowerBound: number,
   upperBound: number,
+  targetArea: boolean,
 ): string {
   const bounds = `
   <div
+    id="target-area"
+    style="position: absolute; bottom: ${lowerBound}%; width: 100%; height: ${upperBound - lowerBound}%; background-color: #0000ff; z-index:2"
+  >
+  </div>
+  <div
     id="lower-bound"
-    style="position: absolute; bottom: ${lowerBound}%; width: 100%; height: 2px; background-color: black;"
+    style="position: absolute; bottom: ${lowerBound}%; width: 100%; height: 2px; background-color: black; z-index:4"
   ></div>
   <div
     id="upper-bound"
-    style="position: absolute; bottom: ${upperBound}%; width: 100%; height: 2px; background-color: black;"
+    style="position: absolute; bottom: ${upperBound}%; width: 100%; height: 2px; background-color: black; z-index:4"
   ></div>
 `;
+
+  const targetAreaText = targetArea
+    ? `
+  <div style="position: absolute; left: 110px; bottom: ${lowerBound + (upperBound - lowerBound) / 2}%; transform: translateY(50%); width:100px;">
+    <b>Target Area</b>
+  </div>`
+    : ``;
 
   const thermometer = showThermometer
     ? `<div
@@ -44,7 +57,7 @@ export function stimulus(
       >
         <div
           id="mercury"
-          style="height: ${mercuryHeight}%; background-color: red;"
+          style="height: ${mercuryHeight}%; background-color: red; z-index:3"
         ></div>
         ${bounds}
       </div>
@@ -53,10 +66,13 @@ export function stimulus(
        <p style="font-size: 48px; position: absolute;">+</p>
      </div>`;
   return `
-     <div id="go-message" style="position: absolute; top: 20%; font-size: 160px; color: green; visibility: hidden; transform: translateX(-50%); left: 50%; white-space: nowrap;">${GO_MESSAGE}</div>
-     <div id="task-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; position: relative; padding: 0 20px;">
-       ${thermometer}
-     </div>
+      <div id="go-message" style="position: absolute; top: 20%; font-size: 160px; color: green; visibility: hidden; transform: translateX(-50%); left: 50%; white-space: nowrap;">${GO_MESSAGE}</div>
+      <div id="task-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; position: relative; padding: 0 200px;">
+        <div style="display: flex; align-items: center; position: relative;">
+          ${targetAreaText}
+          ${thermometer}
+        </div>
+      </div>
    `;
 }
 

@@ -190,7 +190,7 @@ const generateTaskTrial = (
           },
         },
       ]
-    : [successScreen(jsPsych)]),
+    : [successScreen(jsPsych, OtherTaskStagesType.Block)]),
   ...(demo
     ? [loadingBarTrial(true, jsPsych)]
     : [

@@ -36,6 +36,7 @@ export type TappingTaskParametersType = {
   keyTappedEarlyFlag: boolean;
   showKeyboard: boolean;
   randomChanceAccepted: boolean;
+  targetArea: boolean;
 };
 
 export type TappingTaskDataType = {
@@ -194,6 +195,10 @@ class TappingTask {
         default: false,
       },
       randomChanceAccepted: {
+        type: ParameterType.BOOL,
+        default: false,
+      },
+      targetArea: {
         type: ParameterType.BOOL,
         default: false,
       },
@@ -399,6 +404,7 @@ class TappingTask {
         this.mercuryHeight,
         trial.bounds[0],
         trial.bounds[1],
+        trial.targetArea,
       );
 
       updateUI();
@@ -411,6 +417,7 @@ class TappingTask {
       this.mercuryHeight,
       trial.bounds[0],
       trial.bounds[1],
+      trial.targetArea,
     );
 
     if (trial.showKeyboard) {

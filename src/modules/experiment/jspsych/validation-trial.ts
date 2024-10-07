@@ -129,6 +129,7 @@ export const createValidationTrial = (
               duration: TRIAL_DURATION,
               showThermometer: true,
               bounds: defaultValidationBounds[validationName],
+              targetArea: true,
               autoIncreaseAmount() {
                 return autoIncreaseAmountCalculation(
                   EXPECTED_MAXIMUM_PERCENTAGE,
@@ -164,7 +165,7 @@ export const createValidationTrial = (
                 return checkKeys(validationName, jsPsych);
               },
             },
-            successScreen(jsPsych),
+            successScreen(jsPsych, validationName),
             {
               timeline: [loadingBarTrial(true, jsPsych)],
             },
