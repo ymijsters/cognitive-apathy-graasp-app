@@ -279,7 +279,7 @@ class TappingTask {
       if (startMessageElement) {
         startMessageElement.style.display = areKeysHeld ? 'block' : 'none';
       }
-      if (!areKeysHeld && !trial.keyTappedEarlyFlag) {
+      if (!areKeysHeld && !trial.keyTappedEarlyFlag && !randomSkip) {
         setError(PREMATURE_KEY_RELEASE_ERROR_MESSAGE);
         // eslint-disable-next-line no-param-reassign
         trial.keysReleasedFlag = true;
@@ -459,7 +459,7 @@ class TappingTask {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
 
-    if (trial.keyTappedEarlyFlag) {
+    if (trial.keyTappedEarlyFlag && !randomSkip) {
       // eslint-disable-next-line no-param-reassign
       display_element.innerHTML = `
         <div id="status" style="margin-top: 50px;">

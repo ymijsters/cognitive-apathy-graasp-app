@@ -95,6 +95,7 @@ const generateTaskTrial = (
   blockType: DelayType,
   demo: boolean,
   randomSkip: boolean,
+  updateData: (data: DataCollection) => void,
 ): Timeline => [
   ...(!randomSkip ? [countdownStep()] : []),
   {
@@ -156,6 +157,7 @@ const generateTaskTrial = (
         };
         saveDataToLocalStorage(jsPsych);
       }
+      updateData(jsPsych.data.get());
     },
   },
   {
@@ -218,6 +220,7 @@ export const createTaskBlockDemo = (
   jsPsych: JsPsych,
   state: ExperimentState,
   delay: DelayType,
+  updateData: (data: DataCollection) => void,
 ): Timeline => [
   {
     type: htmlButtonResponse,
@@ -247,6 +250,7 @@ export const createTaskBlockDemo = (
         delay,
         true,
         false,
+        updateData,
       ),
       loop_function() {
         return (
@@ -319,10 +323,7 @@ export const createTaskBlockTrials = (
           on_finish: (data: any) => {
             // ADD TYPE FOR DATA
             // eslint-disable-next-line no-param-reassign
-            data.accepted = jsPsych.pluginAPI.compareKeys(
-              data.response,
-              'arrowright',
-            );
+            data.accepted = data.response === 'ArrowRight';
           },
         },
         {
@@ -333,12 +334,10 @@ export const createTaskBlockTrials = (
             delay,
             false,
             randomSkip,
+            updateData,
           ),
           conditional_function() {
-            checkFlag(OtherTaskStagesType.Accept, 'accepted', jsPsych);
-          },
-          on_timeline_finish: () => {
-            updateData(jsPsych.data.get());
+            return checkFlag(OtherTaskStagesType.Accept, 'accepted', jsPsych);
           },
         },
       ];
@@ -395,7 +394,7 @@ export const generateTaskTrialBlock = (
   delay: DelayType,
   updateData: (data: DataCollection) => void,
 ): Timeline => [
-  { timeline: createTaskBlockDemo(jsPsych, state, delay) },
+  { timeline: createTaskBlockDemo(jsPsych, state, delay, updateData) },
   { timeline: createTaskBlockTrials(jsPsych, state, delay, updateData) },
   {
     // Likert scale survey after block

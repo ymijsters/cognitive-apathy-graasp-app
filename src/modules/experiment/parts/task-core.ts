@@ -40,8 +40,6 @@ export const buildTaskCore = (
 
   // User is displayed instructions and visual demonstration on how the trial blocks will proceed
   taskTimeline.push(trialBlocksDirection(jsPsych));
-  // randomTrialOrder is pushed for a random order
-  // taskTimeline.push(randomTrialOrder(jsPsych, state));
   const trialBlock = generateTrialOrder(state);
   taskTimeline.push({
     timeline: trialBlock.map((delay: DelayType) =>
