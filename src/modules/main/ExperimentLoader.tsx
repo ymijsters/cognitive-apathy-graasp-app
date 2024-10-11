@@ -28,6 +28,7 @@ export const ExperimentLoader: FC = () => {
     appDataListRef.current
       ?.filter((appData) => appData.type === 'tapping')
       .findLast((appData) => {
+        // @ts-ignore
         return appData.account.id === participantId;
       }),
   );
@@ -36,6 +37,7 @@ export const ExperimentLoader: FC = () => {
     appDataListRef.current = appDataList;
     currentAppDataRef.current = appDataListRef.current
       ?.filter((appData) => appData.type === 'tapping')
+      // @ts-ignore
       .findLast((appData) => appData.account.id === participantId);
   }, [appDataList, participantId]);
 
