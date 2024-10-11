@@ -29,14 +29,18 @@ import { Timeline } from './utils/types';
 export async function run({
   assetPaths,
   input,
-  onFinish,
+  updateData,
 }: {
   assetPaths: { images: string[]; audio: string[]; video: string[] };
   input: AllSettingsType;
-  onFinish: (data: DataCollection) => void;
+  updateData: (data: DataCollection, settings: AllSettingsType) => void;
 }): Promise<JsPsych> {
   // To do: Initiate a state based on 'input' containing all settings
   const state = new ExperimentState(input);
+
+  const updateDataWithSettings = (data: DataCollection): void => {
+    updateData(data, input);
+  };
 
   const jsPsych = initJsPsych({
     show_progress_bar: true,
@@ -67,13 +71,13 @@ export async function run({
 
   timeline.push(buildIntroduction(jsPsych));
   timeline.push(buildPracticeTrials(jsPsych, state));
-  timeline.push(buildCalibration(jsPsych, state, onFinish));
-  timeline.push(buildValidation(jsPsych, state, onFinish));
-  timeline.push(buildTaskCore(jsPsych, state));
-  timeline.push(buildFinalCalibration(jsPsych, state));
+  timeline.push(buildCalibration(jsPsych, state, updateDataWithSettings));
+  timeline.push(buildValidation(jsPsych, state, updateDataWithSettings));
+  timeline.push(buildTaskCore(jsPsych, state, updateDataWithSettings));
+  timeline.push(buildFinalCalibration(jsPsych, state, updateDataWithSettings));
 
   // User clicks continue to download experiment data locally
-  timeline.push(finishExperiment(jsPsych, onFinish));
+  timeline.push(finishExperiment(jsPsych, updateDataWithSettings));
   await jsPsych.run(timeline);
 
   return jsPsych;

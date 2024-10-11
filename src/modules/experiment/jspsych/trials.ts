@@ -1,6 +1,6 @@
 import htmlButtonResponse from '@jspsych/plugin-html-button-response';
 import HtmlKeyboardResponsePlugin from '@jspsych/plugin-html-keyboard-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 // Assuming you have the appropriate types defined here
 import { countdownStep } from '../trials/countdown-trial';
@@ -276,6 +276,7 @@ export const createTaskBlockTrials = (
   jsPsych: JsPsych,
   state: ExperimentState,
   delay: DelayType,
+  updateData: (data: DataCollection) => void,
 ): Timeline => [
   // Inline code that for the number of repetitions as set in the settings shuffles all possible permutations randomly and then creates a trial block for each
   Array.from(
@@ -333,12 +334,12 @@ export const createTaskBlockTrials = (
             false,
             randomSkip,
           ),
-          conditional_function: () =>
-            checkFlag(
-              OtherTaskStagesType.Accept,
-              'accepted',
-              jsPsych,
-            ) /* && trialData.randomChanceAccepted */, // Use trialData.accepted in the conditional function
+          conditional_function() {
+            checkFlag(OtherTaskStagesType.Accept, 'accepted', jsPsych);
+          },
+          on_timeline_finish: () => {
+            updateData(jsPsych.data.get());
+          },
         },
       ];
     }),
@@ -392,9 +393,10 @@ export const generateTaskTrialBlock = (
   jsPsych: JsPsych,
   state: ExperimentState,
   delay: DelayType,
+  updateData: (data: DataCollection) => void,
 ): Timeline => [
   { timeline: createTaskBlockDemo(jsPsych, state, delay) },
-  { timeline: createTaskBlockTrials(jsPsych, state, delay) },
+  { timeline: createTaskBlockTrials(jsPsych, state, delay, updateData) },
   {
     // Likert scale survey after block
     timeline: [

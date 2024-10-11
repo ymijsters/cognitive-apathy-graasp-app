@@ -1,5 +1,5 @@
 import HtmlButtonResponsePlugin from '@jspsych/plugin-html-button-response';
-import { JsPsych } from 'jspsych';
+import { DataCollection, JsPsych } from 'jspsych';
 
 import { ExperimentState } from '../jspsych/experiment-state-class';
 import { generateTaskTrialBlock, generateTrialOrder } from '../jspsych/trials';
@@ -34,6 +34,7 @@ const trialBlocksDirection = (jsPsych: JsPsych): Trial => ({
 export const buildTaskCore = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  updateData: (data: DataCollection) => void,
 ): Timeline => {
   const taskTimeline: Timeline = [];
 
@@ -44,7 +45,7 @@ export const buildTaskCore = (
   const trialBlock = generateTrialOrder(state);
   taskTimeline.push({
     timeline: trialBlock.map((delay: DelayType) =>
-      generateTaskTrialBlock(jsPsych, state, delay),
+      generateTaskTrialBlock(jsPsych, state, delay, updateData),
     ),
   });
 

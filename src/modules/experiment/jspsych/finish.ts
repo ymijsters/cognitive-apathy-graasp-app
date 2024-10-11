@@ -32,7 +32,7 @@ import {
 
 export const finishExperiment = (
   jsPsych: JsPsych,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   type: htmlButtonResponse,
   choices: [FINISH_BUTTON_MESSAGE],
@@ -49,7 +49,7 @@ export const finishExperiment = (
     // eslint-disable-next-line no-param-reassign
     data.totalReward = totalSuccessfulReward;
     const resultData = jsPsych.data.get();
-    onFinish(resultData);
+    updateData(resultData);
     showEndScreen(EXPERIMENT_HAS_ENDED_MESSAGE);
   },
 });
@@ -95,7 +95,7 @@ export const finishExperimentEarly = (
 
 export const finishExperimentEarlyTrial = (
   jsPsych: JsPsych,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   type: htmlButtonResponse,
   choices: [FINISH_BUTTON_MESSAGE],
@@ -104,6 +104,6 @@ export const finishExperimentEarlyTrial = (
     task: 'finish_experiment',
   },
   on_finish() {
-    finishExperimentEarly(jsPsych, onFinish);
+    finishExperimentEarly(jsPsych, updateData);
   },
 });

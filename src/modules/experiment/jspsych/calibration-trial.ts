@@ -223,7 +223,7 @@ export const createCalibrationTrial = ({
  */
 export const createConditionalCalibrationTrial = (
   { calibrationPart, jsPsych, state }: ConditionalCalibrationTrialParams,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   timeline: [
     // Add a trial with the directions that the user should tap faster
@@ -248,7 +248,7 @@ export const createConditionalCalibrationTrial = (
     }),
     {
       // If minimum taps is not reached in this set of conditional trials, then end experiment
-      timeline: [finishExperimentEarlyTrial(jsPsych, onFinish)],
+      timeline: [finishExperimentEarlyTrial(jsPsych, updateData)],
       conditional_function() {
         return (
           state.getState().medianTaps[calibrationPart] <
@@ -281,6 +281,7 @@ export const calibrationTrial = (
   jsPsych: JsPsych,
   state: ExperimentState,
   calibrationPart: CalibrationPartType,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   timeline: [
     createCalibrationTrial({
@@ -305,6 +306,7 @@ export const calibrationTrial = (
         jsPsych,
       );
     }
+    updateData(jsPsych.data.get());
   },
 });
 
@@ -325,7 +327,7 @@ export const conditionalCalibrationTrial = (
   jsPsych: JsPsych,
   state: ExperimentState,
   calibrationPart: CalibrationPartType,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   ...createConditionalCalibrationTrial(
     {
@@ -333,7 +335,7 @@ export const conditionalCalibrationTrial = (
       jsPsych,
       state,
     },
-    onFinish,
+    updateData,
   ),
   on_timeline_finish() {
     if (state.getState().calibrationPartsPassed[calibrationPart]) {

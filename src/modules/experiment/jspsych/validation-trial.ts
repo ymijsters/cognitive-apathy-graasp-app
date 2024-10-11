@@ -116,6 +116,7 @@ export const createValidationTrial = (
   validationName: ValidationPartType,
   jsPsych: JsPsych,
   state: ExperimentState,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   timeline: [
     {
@@ -157,6 +158,7 @@ export const createValidationTrial = (
                 // eslint-disable-next-line no-param-reassign
                 data.task = validationName;
                 handleValidationFinish(data, validationName, state);
+                updateData(jsPsych.data.get());
               },
             },
             {
@@ -213,7 +215,7 @@ export const createValidationTrial = (
 export const validationResultScreen = (
   jsPsych: JsPsych,
   state: ExperimentState,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   type: htmlButtonResponse,
   choices: [CONTINUE_BUTTON_MESSAGE],
@@ -224,7 +226,7 @@ export const validationResultScreen = (
   },
   on_finish() {
     if (!state.getState().validationState.validationSuccess) {
-      finishExperimentEarly(jsPsych, onFinish);
+      finishExperimentEarly(jsPsych, updateData);
     }
   },
 });
@@ -245,9 +247,15 @@ export const validationResultScreen = (
 export const validationTrialExtra = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  updateData: (data: DataCollection) => void,
 ): Trial => ({
   timeline: [
-    createValidationTrial(ValidationPartType.ValidationExtra, jsPsych, state),
+    createValidationTrial(
+      ValidationPartType.ValidationExtra,
+      jsPsych,
+      state,
+      updateData,
+    ),
   ],
   on_timeline_finish() {
     if (

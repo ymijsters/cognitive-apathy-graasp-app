@@ -41,8 +41,8 @@ const ResultsView: FC = () => {
   const allData = (): string => {
     const completeJSON: string[] = [];
     appData?.forEach((data) => {
-      const experimentJSON = data.data.data
-        ? new DataCollection(data.data.data.trials)
+      const experimentJSON = data.data.rawData
+        ? new DataCollection(data.data.rawData.trials)
         : undefined;
       if (experimentJSON) {
         completeJSON.push(experimentJSON.json());
@@ -85,8 +85,8 @@ const ResultsView: FC = () => {
           </TableHead>
           <TableBody>
             {appData?.map((data) => {
-              const rawData = data.data.data
-                ? new DataCollection(data.data.data.trials)
+              const rawData = data.data.rawData
+                ? new DataCollection(data.data.rawData.trials)
                 : undefined;
               return (
                 <ResultsRow

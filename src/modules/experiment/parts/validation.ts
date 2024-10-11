@@ -37,7 +37,7 @@ export const validationVideoTutorialTrial = (jsPsych: JsPsych): Trial => ({
 export const buildValidation = (
   jsPsych: JsPsych,
   state: ExperimentState,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Timeline => {
   const validationTimeline: Timeline = [];
   // User is displayed instructions and visual demonstration on how the validations trials will proceed
@@ -58,13 +58,13 @@ export const buildValidation = (
         break;
     }
     validationTimeline.push(
-      createValidationTrial(validationPart, jsPsych, state),
+      createValidationTrial(validationPart, jsPsych, state, updateData),
     );
   });
 
   // If 3/4 or more of any of the group of the validation trials are failed for any reason, validationTrialExtra is pushed (3 trials, user must end with top of red bar in target area, bounds are [70,90])
   validationTimeline.push({
-    ...validationTrialExtra(jsPsych, state),
+    ...validationTrialExtra(jsPsych, state, updateData),
     conditional_function() {
       return state.getState().validationState.extraValidationRequired;
     },
@@ -74,7 +74,7 @@ export const buildValidation = (
   validationTimeline.push(likertFinalQuestionAfterValidation());
 
   // Showcase the final result screen of the validation
-  validationTimeline.push(validationResultScreen(jsPsych, state, onFinish));
+  validationTimeline.push(validationResultScreen(jsPsych, state, updateData));
 
   return validationTimeline;
 };

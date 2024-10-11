@@ -1,24 +1,66 @@
 /* eslint-disable */
-import { FC, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { useLocalContext } from '@graasp/apps-query-client';
+import { AppData } from '@graasp/sdk';
 
 import { DataCollection, JsPsych } from 'jspsych';
+import { isEqual } from 'lodash';
 
-import { AllSettingsType } from '../context/SettingsContext';
+import { hooks, mutations } from '@/config/queryClient';
+
+import { ExperimentResult } from '../config/appResults';
+import { AllSettingsType, useSettings } from '../context/SettingsContext';
 import { run } from '../experiment/experiment';
 
-type ExperimentProps = {
-  onCompleteExperiment: (
-    data: DataCollection,
-    settings: AllSettingsType,
-  ) => void;
-  settings: AllSettingsType;
-};
+export const ExperimentLoader: FC = () => {
+  const { mutate: postAppData } = mutations.usePostAppData();
+  const { mutate: patchAppData } = mutations.usePatchAppData();
+  const { data: appDataList, isLoading: appDataLoading } =
+    hooks.useAppData<ExperimentResult>();
+  const { memberId: participantId } = useLocalContext();
+  const settings = useSettings();
 
-export const ExperimentLoader: FC<ExperimentProps> = ({
-  onCompleteExperiment,
-  settings,
-}) => {
   const jsPsychRef = useRef<null | Promise<JsPsych>>(null);
+  const dataRef = useRef<null | DataCollection>(null);
+  const appDataListRef = useRef(appDataList);
+  const currentAppDataRef = useRef(
+    appDataListRef.current
+      ?.filter((appData) => appData.type === 'tapping')
+      .findLast((appData) => {
+        return appData.account.id === participantId;
+      }),
+  );
+
+  useEffect(() => {
+    appDataListRef.current = appDataList;
+    currentAppDataRef.current = appDataListRef.current
+      ?.filter((appData) => appData.type === 'tapping')
+      .findLast((appData) => appData.account.id === participantId);
+  }, [appDataList, participantId]);
+
+  const updateData = (
+    rawData: DataCollection,
+    settings: AllSettingsType,
+  ): void => {
+    if (!dataRef.current) {
+      postAppData({
+        data: { settings, rawData },
+        type: 'tapping',
+      });
+      dataRef.current = Object.create(rawData);
+    } else if (
+      currentAppDataRef.current &&
+      !isEqual(currentAppDataRef.current.data, rawData)
+    ) {
+      patchAppData({
+        data: { settings, rawData },
+        id: currentAppDataRef.current.id,
+      });
+      dataRef.current = rawData;
+    }
+    //}
+  };
 
   const assetPath = {
     images: [
@@ -39,18 +81,13 @@ export const ExperimentLoader: FC<ExperimentProps> = ({
     misc: ['assets/locales/en/ns1.json', 'assets/locales/fr/ns1.json'],
   };
 
-  const onFinish = (data: DataCollection): void => {
-    console.log('In Experiment Loader');
-    onCompleteExperiment(data, settings);
-  };
-
   useEffect(() => {
-    if (!jsPsychRef.current) {
+    if (!jsPsychRef.current && settings) {
       console.log(`In Experiment Component`);
       jsPsychRef.current = run({
         assetPaths: assetPath,
         input: settings,
-        onFinish: onFinish,
+        updateData: updateData,
       });
     }
   }, []);

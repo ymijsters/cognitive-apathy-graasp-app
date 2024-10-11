@@ -69,7 +69,7 @@ const calibrationVideo = (
 export const buildCalibration = (
   jsPsych: JsPsych,
   state: ExperimentState,
-  onFinish: (data: DataCollection) => void,
+  updateData: (data: DataCollection) => void,
 ): Timeline => {
   const calibrationTimeline: Timeline = [];
 
@@ -81,7 +81,12 @@ export const buildCalibration = (
 
   // Calibration part 1 proceeds (4 trials, user taps as fast as possible, no visual feedback)
   calibrationTimeline.push(
-    calibrationTrial(jsPsych, state, CalibrationPartType.CalibrationPart1),
+    calibrationTrial(
+      jsPsych,
+      state,
+      CalibrationPartType.CalibrationPart1,
+      updateData,
+    ),
   );
 
   // If the median tap count from calibrationTrialPart1 is less than MINIMUM_CALIBRATION_MEDIAN, conditionalCalibrationTrialPart1 is pushed (Warning so user taps faster, 4 trials, user taps as fast as possible, no visual feedback)
@@ -90,7 +95,7 @@ export const buildCalibration = (
       jsPsych,
       state,
       CalibrationPartType.CalibrationPart1,
-      onFinish,
+      updateData,
     ),
   );
 
@@ -101,7 +106,12 @@ export const buildCalibration = (
 
   // Calibration part 2 proceeds (3 trials, user taps as fast as possible, visual feedback)
   calibrationTimeline.push(
-    calibrationTrial(jsPsych, state, CalibrationPartType.CalibrationPart2),
+    calibrationTrial(
+      jsPsych,
+      state,
+      CalibrationPartType.CalibrationPart2,
+      updateData,
+    ),
   );
   // If the median tap count from calibrationTrialPart2 is less than MINIMUM_CALIBRATION_MEDIAN, conditionalCalibrationTrialPart2 is pushed (Warning so user taps faster, 3 trials, user taps as fast as possible, visual feedback)
 
@@ -110,7 +120,7 @@ export const buildCalibration = (
       jsPsych,
       state,
       CalibrationPartType.CalibrationPart2,
-      onFinish,
+      updateData,
     ),
   );
 
@@ -120,6 +130,7 @@ export const buildCalibration = (
 export const buildFinalCalibration = (
   jsPsych: JsPsych,
   state: ExperimentState,
+  updateData: (data: DataCollection) => void,
 ): Timeline => {
   const finalCalibrationTimeline: Timeline = [];
   // User is displayed instructions on how the final calibration part 1 trials will proceed
@@ -128,7 +139,12 @@ export const buildFinalCalibration = (
   );
   // Calibration part 1 proceeds (3 trials, user taps as fast as possible, no visual feedback)
   finalCalibrationTimeline.push(
-    calibrationTrial(jsPsych, state, CalibrationPartType.FinalCalibrationPart1),
+    calibrationTrial(
+      jsPsych,
+      state,
+      CalibrationPartType.FinalCalibrationPart1,
+      updateData,
+    ),
   );
   // User is displayed instructions on how the final calibration part 1 trials will proceed
   finalCalibrationTimeline.push(
@@ -136,7 +152,12 @@ export const buildFinalCalibration = (
   );
   // Calibration part 2 proceeds (3 trials, user taps as fast as possible, visual feedback)
   finalCalibrationTimeline.push(
-    calibrationTrial(jsPsych, state, CalibrationPartType.FinalCalibrationPart2),
+    calibrationTrial(
+      jsPsych,
+      state,
+      CalibrationPartType.FinalCalibrationPart2,
+      updateData,
+    ),
   );
 
   return finalCalibrationTimeline;
